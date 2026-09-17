@@ -1,3 +1,13 @@
+# Practicum autoharness dashboard
+
+Website: [wodex1nhaoIeng.github.io/practicum](https://wodex1nhaoIeng.github.io/practicum/)
+
+For local setup, data files, and the conversion script, see [DASHBOARD.md](DASHBOARD.md).
+Viewing this dashboard does not require building Kani or initializing submodules.
+The original project and its documentation are preserved below.
+
+---
+
 **Distributed and resource-efficient verification for verify-rust-std**
 
 Context: [Distributed and resource-efficient verification][distributed], GSoC Rust 2025
@@ -259,4 +269,3 @@ At the time of writing, there are over 31 issues in the repo. The main ones are:
 [#111]: https://github.com/os-checker/distributed-verification/issues/111
 [#4312]: https://github.com/model-checking/kani/pull/4312
 [#68]: https://github.com/os-checker/distributed-verification/issues/68
-

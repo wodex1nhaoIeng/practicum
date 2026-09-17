@@ -49,9 +49,12 @@ function btnStyle(target: string) {
     <div class="flex justify-between my-1 px-2">
       <div class="flex gap-2">
         <NuxtLink to="/">
-          <Button title="Table" icon="pi pi-table" :style="btnStyle('')" />
+          <Button title="Autoharness" icon="pi pi-chart-pie" :style="btnStyle('autoharness')" />
         </NuxtLink>
-        <NuxtLink to="chart">
+        <NuxtLink to="/functions">
+          <Button title="Functions" icon="pi pi-list-check" :style="btnStyle('functions')" />
+        </NuxtLink>
+        <NuxtLink to="/chart">
           <Button title="Chart" icon="pi pi-chart-bar" :style="btnStyle('chart')" />
         </NuxtLink>
       </div>

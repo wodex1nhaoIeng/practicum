@@ -1,0 +1,98 @@
+{
+  "generatedAt": "2026-09-16",
+  "meta": {
+    "title": "Rust standard library autoharness baseline",
+    "kaniCommit": "b07abe8a7",
+    "kaniVersion": "0.67.0",
+    "verifyRustStdBranch": "sync-2026-08-21-aarch64-fixes",
+    "target": "aarch64-apple-darwin"
+  },
+  "summary": {
+    "automaticHarnesses": 25165,
+    "skipped": 13777,
+    "candidateFunctions": 38942,
+    "coverage": 0.6462174515946792
+  },
+  "crates": [
+    {
+      "name": "core",
+      "selected": 18067,
+      "skipped": 5367,
+      "total": 23434,
+      "coverage": 0.7709737987539472
+    },
+    {
+      "name": "alloc",
+      "selected": 1124,
+      "skipped": 1839,
+      "total": 2963,
+      "coverage": 0.37934525818427267
+    },
+    {
+      "name": "std",
+      "selected": 1112,
+      "skipped": 2546,
+      "total": 3658,
+      "coverage": 0.3039912520503007
+    },
+    {
+      "name": "dependencies",
+      "selected": 4862,
+      "skipped": 4025,
+      "total": 8887,
+      "coverage": 0.5470912568920896
+    }
+  ],
+  "skipReasons": [
+    {
+      "reason": "Missing Arbitrary",
+      "count": 6821,
+      "share": 0.49510052986862163
+    },
+    {
+      "reason": "Generic: no candidate type",
+      "count": 4515,
+      "share": 0.3277201132321986
+    },
+    {
+      "reason": "Non-usize const generic",
+      "count": 1166,
+      "share": 0.08463380997314364
+    },
+    {
+      "reason": "Requires bounded arguments",
+      "count": 1080,
+      "share": 0.07839152210205415
+    },
+    {
+      "reason": "No function body",
+      "count": 195,
+      "share": 0.014154024823981998
+    }
+  ],
+  "legacyComparison": [
+    {
+      "name": "core",
+      "previous": 12834,
+      "current": 18067,
+      "change": 0.4077450522050803
+    },
+    {
+      "name": "alloc",
+      "previous": 138,
+      "current": 1124,
+      "change": 7.144927536231885
+    },
+    {
+      "name": "std",
+      "previous": 1259,
+      "current": 1112,
+      "change": -0.11675933280381257
+    }
+  ],
+  "notes": [
+    "Current baseline uses Kani b07abe8a7 with local compatibility patches and verify-rust-std sync-2026-08-21 fixes.",
+    "The older Kani 0.67.0 snapshot uses a different library snapshot and target context, so its delta is contextual rather than a contribution measurement.",
+    "Semester progress should compare two runs produced at the same time with the same Kani and rustc: upstream baseline versus the version containing the team's changes."
+  ]
+}

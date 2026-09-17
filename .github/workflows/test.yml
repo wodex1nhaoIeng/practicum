@@ -1,8 +1,7 @@
 name: Run Tests
 
 on:
-  push:
-  # workflow_dispatch:
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -191,4 +190,3 @@ jobs:
           path: verify-rust-std/kani-list.json
           compression-level: 9
           if-no-files-found: error
-

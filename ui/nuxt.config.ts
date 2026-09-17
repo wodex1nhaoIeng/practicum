@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   ssr: false, // Client-side Only Rendering (SPA)
+  nitro: {
+    prerender: { routes: ['/autoharness', '/functions', '/chart', '/harnesses'] }
+  },
   css: [
     "primeicons/primeicons.css",
     "~/assets/css/main.css",

@@ -2,7 +2,8 @@ name: Deploy Doc
 
 on:
   push:
-  # workflow_dispatch:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -10,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
       # - name: Build static files
       #   env:
       #     CARGO_TERM_COLOR: always
@@ -42,7 +48,7 @@ jobs:
       #   with:
       #     path: target/doc/
       - name: Build UI
-        run: cd ui && npm i && NUXT_APP_BASE_URL=/distributed-verification/ npm run generate
+        run: cd ui && npm ci && NUXT_APP_BASE_URL=/practicum/ npm run generate
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:
