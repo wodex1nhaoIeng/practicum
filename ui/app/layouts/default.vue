@@ -54,9 +54,6 @@ function btnStyle(target: string) {
         <NuxtLink to="/functions">
           <Button title="Functions" icon="pi pi-list-check" :style="btnStyle('functions')" />
         </NuxtLink>
-        <NuxtLink to="/chart">
-          <Button title="Chart" icon="pi pi-chart-bar" :style="btnStyle('chart')" />
-        </NuxtLink>
       </div>
       <div>
         <Button :icon='dark ? "pi pi-sun" : "pi pi-moon"' @click="toggleTheme" severity="contrast" raised />
