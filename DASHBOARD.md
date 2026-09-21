@@ -43,7 +43,9 @@ than an edit to the script:
 
 - `snapshot.json`: `generatedAt`, `listFile`, `kaniListFile`, the `expected` totals the listing
   must add up to, `meta` (Kani commit, verify-rust-std branch, target), `legacyPrevious`
-  (old-release counts for the context panel) and `notes`.
+  (old-release counts for the tool-update panel), `improvement` (per-crate counts of the
+  baseline's bounded run and of the measured run with the team's changes; `null` renders as
+  pending) and `notes`.
 - the listing file, the text output of `kani autoharness --list --std`: generated and skipped
   functions with the skip reasons.
 - the `kani list` JSON file, for the Kani version.

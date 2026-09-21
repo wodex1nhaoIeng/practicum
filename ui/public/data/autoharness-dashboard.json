@@ -90,10 +90,31 @@
       "change": -0.003971405877680745
     }
   ],
+  "improvementComparison": [
+    {
+      "name": "core",
+      "previous": 20080,
+      "current": null,
+      "change": null
+    },
+    {
+      "name": "alloc",
+      "previous": 1203,
+      "current": null,
+      "change": null
+    },
+    {
+      "name": "std",
+      "previous": 1308,
+      "current": null,
+      "change": null
+    }
+  ],
   "notes": [
     "Baseline run of 2026-09-17 on x86_64 Linux: Kani 02abb5b0d, which is b07abe8a7 plus the team's two compatibility commits and three fixes (kani#4799, kani#4801, and a local workaround for kani#4794), on verify-rust-std sync-2026-08-21 at 9b38cdc4d84 with the team's local workarounds. Command: kani autoharness --list --std over the library with the unstable feature flags, without --bounded-arguments. 73 minutes, no errors.",
     "The listing omits the 4,563 functions Kani skips as its own implementations; counting them, the run considered 45,796 functions.",
     "A second run with --bounded-arguments and nothing else changed generated 28,077 harnesses and skipped 13,156: exactly the 1,102 functions listed under 'Requires --bounded-arguments' moved to generated, every other count stayed the same, and wall clock went from 73 to 88 minutes.",
+    "The contribution comparison is pending a measured run: the team's branches on the same Kani base, rustc and library snapshot, with --bounded-arguments, against the baseline's bounded run (core 20,080, alloc 1,203, std 1,308 generated; 28,077 in all).",
     "The old-release counts are the Kani 0.67.0 release's own autoharness data, carried over from the 2026-09-16 snapshot; that snapshot (aarch64, Kani b07abe8a7, 25,165 generated of 38,942) is in the repository history.",
     "Semester progress should compare two runs produced at the same time with the same Kani and rustc: upstream baseline versus the version containing the team's changes."
   ]

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type CrateDatum = { name: string; selected: number; skipped: number; total: number; coverage: number };
 type SkipReason = { reason: string; count: number; share: number };
-type Comparison = { name: string; previous: number; current: number; change: number };
+type Comparison = { name: string; previous: number | null; current: number | null; change: number | null };
 type DashboardData = {
   generatedAt: string;
   meta: { title: string; kaniCommit: string; kaniVersion: string; verifyRustStdBranch: string; target: string };
@@ -9,6 +9,7 @@ type DashboardData = {
   crates: CrateDatum[];
   skipReasons: SkipReason[];
   legacyComparison: Comparison[];
+  improvementComparison: Comparison[];
   notes: string[];
 };
 
@@ -20,6 +21,8 @@ const { data, error } = await useAsyncData("autoharness-dashboard", () =>
 const nf = new Intl.NumberFormat("en-US");
 const pct = (value: number) => `${(value * 100).toFixed(1)}%`;
 const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value)}`;
+const num = (value: number | null) => (value === null ? "—" : nf.format(value));
+const delta = (value: number | null) => (value === null ? "pending" : signedPct(value));
 
 </script>
 
@@ -31,7 +34,7 @@ const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value)}`;
         <div>
           <p class="eyebrow">Baseline · {{ data.generatedAt }}</p>
           <h1>Rust std autoharness generation</h1>
-          <p class="subtitle">Every function considered by this run is classified as generated or skipped, with actionable skip reasons.</p>
+          <p class="subtitle">Every function in the run's listing is classified as generated or skipped, with the reason for each skip. Generated means Kani could build a harness for the function; it does not mean the function verified.</p>
         </div>
         <div class="run-meta">
           <span>Kani <code>{{ data.meta.kaniCommit }}</code></span>
@@ -48,12 +51,12 @@ const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value)}`;
         <article class="metric">
           <span>Skipped functions</span>
           <strong>{{ nf.format(data.summary.skipped) }}</strong>
-          <small>Grouped by actionable reason below</small>
+          <small>Grouped by reason below</small>
         </article>
         <article class="metric">
           <span>Candidate functions</span>
           <strong>{{ nf.format(data.summary.candidateFunctions) }}</strong>
-          <small>All functions classified by this run</small>
+          <small>Generated plus skipped, as listed by this run</small>
         </article>
         <article class="metric">
           <span>Generation rate</span>
@@ -95,19 +98,35 @@ const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value)}`;
           </div>
         </section>
 
-        <section class="panel comparison-panel">
-          <div class="section-heading">
-            <div><p class="eyebrow">Context only</p><h2>Old release vs current baseline</h2></div>
-          </div>
-          <div v-for="item in data.legacyComparison" :key="item.name" class="comparison-row">
-            <strong>{{ item.name }}</strong>
-            <span>{{ nf.format(item.previous) }}</span>
-            <i class="pi pi-arrow-right" aria-hidden="true" />
-            <span>{{ nf.format(item.current) }}</span>
-            <b :class="{ negative: item.change < 0 }">{{ signedPct(item.change) }}</b>
-          </div>
-          <p class="caveat">Different library snapshots and architecture context. This shows scale, not the team's measured contribution.</p>
-        </section>
+        <div class="comparison-stack">
+          <section class="panel comparison-panel">
+            <div class="section-heading">
+              <div><p class="eyebrow">Tool update</p><h2>Old release vs captured baseline</h2></div>
+            </div>
+            <div v-for="item in data.legacyComparison" :key="item.name" class="comparison-row">
+              <strong>{{ item.name }}</strong>
+              <span>{{ num(item.previous) }}</span>
+              <i class="pi pi-arrow-right" aria-hidden="true" />
+              <span>{{ num(item.current) }}</span>
+              <b :class="{ negative: (item.change ?? 0) < 0, pending: item.change === null }">{{ delta(item.change) }}</b>
+            </div>
+            <p class="caveat">Left: the Kani 0.67.0 release, as measured by verify-rust-std's own CI on an older library snapshot. Right: the baseline captured after updating Kani to {{ data.meta.kaniCommit }} on {{ data.meta.verifyRustStdBranch }}. Different snapshots and machines: this shows what the tool update did to the scale, not the team's contribution.</p>
+          </section>
+
+          <section class="panel comparison-panel">
+            <div class="section-heading">
+              <div><p class="eyebrow">Contribution</p><h2>Captured baseline vs after our changes</h2></div>
+            </div>
+            <div v-for="item in data.improvementComparison" :key="item.name" class="comparison-row">
+              <strong>{{ item.name }}</strong>
+              <span>{{ num(item.previous) }}</span>
+              <i class="pi pi-arrow-right" aria-hidden="true" />
+              <span>{{ num(item.current) }}</span>
+              <b :class="{ negative: (item.change ?? 0) < 0, pending: item.change === null }">{{ delta(item.change) }}</b>
+            </div>
+            <p class="caveat">Same Kani base, rustc and library snapshot, upstream against the team's branches, both runs with --bounded-arguments since the team's models need it; the left column is the baseline's bounded run. Pending until that measured run exists.</p>
+          </section>
+        </div>
       </div>
 
       <section class="method">
@@ -115,6 +134,7 @@ const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value)}`;
         <ol>
           <li>Run upstream Kani without the team's changes.</li>
           <li>Run the version containing the team's changes at the same time, with the same rustc and verify-rust-std snapshot.</li>
+          <li>Use the same flags in both runs; the team's models need --bounded-arguments.</li>
           <li>Compare “Functions with Automatic Harnesses”; the delta is the contribution.</li>
         </ol>
       </section>
@@ -151,6 +171,8 @@ h2 { margin: 0; font-family: Georgia, serif; font-size: 26px; font-weight: 500; 
 .reason-list { display: grid; gap: 17px; }.reason-label { display: flex; justify-content: space-between; gap: 18px; margin-bottom: 7px; font-size: 13px; }.reason-label strong { font-variant-numeric: tabular-nums; }.reason-track { height: 7px; background: #ebe8df; border-radius: 2px; overflow: hidden; }.reason-track div { height: 100%; background: var(--orange); }
 .comparison-row { display: grid; grid-template-columns: 1fr 64px 16px 64px 72px; align-items: center; gap: 8px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 13px; font-variant-numeric: tabular-nums; }.comparison-row span { text-align: right; }.comparison-row i { color: var(--muted); font-size: 11px; }.comparison-row b { color: var(--green); text-align: right; }
 .comparison-row b.negative { color: var(--orange); }
+.comparison-row b.pending { color: var(--muted); font-weight: 500; }
+.comparison-stack { display: grid; gap: 20px; align-content: start; }.two-column .comparison-stack .panel { margin: 0; }
 .caveat { margin: 18px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
 .method { max-width: 1180px; margin: 34px auto 0; display: grid; grid-template-columns: .75fr 1.25fr; gap: 60px; padding: 30px 0; border-top: 1px solid var(--line); }.method ol { margin: 0; padding-left: 22px; color: var(--muted); line-height: 1.7; list-style: decimal; }.method li { padding-left: 8px; margin-bottom: 8px; }
 .error-state { max-width: 760px; margin: 80px auto; color: #b42318; }

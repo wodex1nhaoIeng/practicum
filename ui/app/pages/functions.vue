@@ -61,7 +61,7 @@ const nf = new Intl.NumberFormat("en-US");
       <div>
         <p class="eyebrow">Per-function explorer · {{ data?.generatedAt }}</p>
         <h1>Autoharness functions</h1>
-        <p>Every function considered by the baseline run, classified by whether Kani generated an automatic harness.</p>
+        <p>Every function in the baseline run's listing, classified by whether Kani generated an automatic harness. Generated does not mean verified.</p>
       </div>
       <div class="counts" aria-live="polite">
         <span><strong>{{ nf.format(generatedCount) }}</strong> generated</span>

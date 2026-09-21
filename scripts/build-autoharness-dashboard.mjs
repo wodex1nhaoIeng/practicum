@@ -105,6 +105,13 @@ const output = {
     const current = selectedByCrate.get(name) ?? 0;
     return { name, previous, current, change: previous ? current / previous - 1 : null };
   }),
+  // Baseline column and "after" column both come from the snapshot: the baseline's bounded run,
+  // and the measured run with the team's changes once it exists (null renders as pending).
+  improvementComparison: primaryCrates.map((name) => {
+    const previous = snapshot.improvement.baseline[name] ?? null;
+    const current = snapshot.improvement.afterChanges[name] ?? null;
+    return { name, previous, current, change: previous && current !== null ? current / previous - 1 : null };
+  }),
   notes: snapshot.notes,
 };
 
