@@ -1,25 +1,25 @@
 {
-  "generatedAt": "2026-09-16",
+  "generatedAt": "2026-09-17",
   "meta": {
     "title": "Rust standard library autoharness baseline",
-    "kaniCommit": "b07abe8a7",
+    "kaniCommit": "02abb5b0d",
     "kaniVersion": "0.67.0",
-    "verifyRustStdBranch": "sync-2026-08-21-aarch64-fixes",
-    "target": "aarch64-apple-darwin"
+    "verifyRustStdBranch": "sync-2026-08-21",
+    "target": "x86_64-unknown-linux-gnu"
   },
   "summary": {
-    "automaticHarnesses": 25165,
-    "skipped": 13777,
-    "candidateFunctions": 38942,
-    "coverage": 0.6462174515946792
+    "automaticHarnesses": 26975,
+    "skipped": 14258,
+    "candidateFunctions": 41233,
+    "coverage": 0.654209007348483
   },
   "crates": [
     {
       "name": "core",
-      "selected": 18067,
-      "skipped": 5367,
-      "total": 23434,
-      "coverage": 0.7709737987539472
+      "selected": 19337,
+      "skipped": 5772,
+      "total": 25109,
+      "coverage": 0.7701222669162452
     },
     {
       "name": "alloc",
@@ -30,52 +30,52 @@
     },
     {
       "name": "std",
-      "selected": 1112,
-      "skipped": 2546,
-      "total": 3658,
-      "coverage": 0.3039912520503007
+      "selected": 1254,
+      "skipped": 2541,
+      "total": 3795,
+      "coverage": 0.33043478260869563
     },
     {
       "name": "dependencies",
-      "selected": 4862,
-      "skipped": 4025,
-      "total": 8887,
-      "coverage": 0.5470912568920896
+      "selected": 5260,
+      "skipped": 4106,
+      "total": 9366,
+      "coverage": 0.5616058082425796
     }
   ],
   "skipReasons": [
     {
       "reason": "Missing Arbitrary",
-      "count": 6821,
-      "share": 0.49510052986862163
+      "count": 6869,
+      "share": 0.4817646233693365
     },
     {
       "reason": "Generic: no candidate type",
-      "count": 4515,
-      "share": 0.3277201132321986
+      "count": 4511,
+      "share": 0.3163837845420115
     },
     {
       "reason": "Non-usize const generic",
-      "count": 1166,
-      "share": 0.08463380997314364
+      "count": 1581,
+      "share": 0.11088511712722682
     },
     {
       "reason": "Requires bounded arguments",
-      "count": 1080,
-      "share": 0.07839152210205415
+      "count": 1102,
+      "share": 0.07728994248842755
     },
     {
       "reason": "No function body",
       "count": 195,
-      "share": 0.014154024823981998
+      "share": 0.013676532472997615
     }
   ],
   "legacyComparison": [
     {
       "name": "core",
       "previous": 12834,
-      "current": 18067,
-      "change": 0.4077450522050803
+      "current": 19337,
+      "change": 0.5067009505999689
     },
     {
       "name": "alloc",
@@ -86,13 +86,15 @@
     {
       "name": "std",
       "previous": 1259,
-      "current": 1112,
-      "change": -0.11675933280381257
+      "current": 1254,
+      "change": -0.003971405877680745
     }
   ],
   "notes": [
-    "Current baseline uses Kani b07abe8a7 with local compatibility patches and verify-rust-std sync-2026-08-21 fixes.",
-    "The older Kani 0.67.0 snapshot uses a different library snapshot and target context, so its delta is contextual rather than a contribution measurement.",
+    "Baseline run of 2026-09-17 on x86_64 Linux: Kani 02abb5b0d, which is b07abe8a7 plus the team's two compatibility commits and three fixes (kani#4799, kani#4801, and a local workaround for kani#4794), on verify-rust-std sync-2026-08-21 at 9b38cdc4d84 with the team's local workarounds. Command: kani autoharness --list --std over the library with the unstable feature flags, without --bounded-arguments. 73 minutes, no errors.",
+    "The listing omits the 4,563 functions Kani skips as its own implementations; counting them, the run considered 45,796 functions.",
+    "A second run with --bounded-arguments and nothing else changed generated 28,077 harnesses and skipped 13,156: exactly the 1,102 functions listed under 'Requires --bounded-arguments' moved to generated, every other count stayed the same, and wall clock went from 73 to 88 minutes.",
+    "The old-release counts are the Kani 0.67.0 release's own autoharness data, carried over from the 2026-09-16 snapshot; that snapshot (aarch64, Kani b07abe8a7, 25,165 generated of 38,942) is in the repository history.",
     "Semester progress should compare two runs produced at the same time with the same Kani and rustc: upstream baseline versus the version containing the team's changes."
   ]
 }

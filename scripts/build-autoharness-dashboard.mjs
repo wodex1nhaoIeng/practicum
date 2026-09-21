@@ -13,8 +13,11 @@ const outputFile = resolve(outputArg);
 const functionsOutputFile = functionsOutputArg
   ? resolve(functionsOutputArg)
   : join(dirname(outputFile), "autoharness-functions.json");
-const autoharnessText = readFileSync(join(inputDir, "autoharness-list-b07abe8a7.txt"), "utf8");
-const kaniList = JSON.parse(readFileSync(join(inputDir, "kani-list-b07abe8a7.json"), "utf8"));
+// snapshot.json describes the run: which files to read, the totals the listing must add up to,
+// the metadata shown on the page, and the old-release counts for the context panel.
+const snapshot = JSON.parse(readFileSync(join(inputDir, "snapshot.json"), "utf8"));
+const autoharnessText = readFileSync(join(inputDir, snapshot.listFile), "utf8");
+const kaniList = JSON.parse(readFileSync(join(inputDir, snapshot.kaniListFile), "utf8"));
 
 const selectedByCrate = new Map();
 const skippedByCrate = new Map();
@@ -74,24 +77,18 @@ const crates = [
 
 const selected = crates.reduce((sum, crate) => sum + crate.selected, 0);
 const skipped = crates.reduce((sum, crate) => sum + crate.skipped, 0);
-if (selected !== 25165 || skipped !== 13777) {
+if (selected !== snapshot.expected.selected || skipped !== snapshot.expected.skipped) {
   throw new Error(`Unexpected totals: selected=${selected}, skipped=${skipped}`);
 }
 
-function readLegacySelected(crate) {
-  const markdown = readFileSync(join(inputDir, `${crate}_autoharness_data.md`), "utf8");
-  const match = markdown.match(/Functions with Automatic Harnesses[\s\S]*?\| Total\s+\|\s*([0-9,]+)/);
-  return match ? Number(match[1].replaceAll(",", "")) : null;
-}
-
 const output = {
-  generatedAt: "2026-09-16",
+  generatedAt: snapshot.generatedAt,
   meta: {
     title: "Rust standard library autoharness baseline",
-    kaniCommit: "b07abe8a7",
+    kaniCommit: snapshot.meta.kaniCommit,
     kaniVersion: kaniList["kani-version"],
-    verifyRustStdBranch: "sync-2026-08-21-aarch64-fixes",
-    target: "aarch64-apple-darwin",
+    verifyRustStdBranch: snapshot.meta.verifyRustStdBranch,
+    target: snapshot.meta.target,
   },
   summary: {
     automaticHarnesses: selected,
@@ -104,15 +101,11 @@ const output = {
     .map(([reason, count]) => ({ reason, count, share: count / skipped }))
     .sort((a, b) => b.count - a.count),
   legacyComparison: primaryCrates.map((name) => {
-    const previous = readLegacySelected(name);
+    const previous = snapshot.legacyPrevious[name] ?? null;
     const current = selectedByCrate.get(name) ?? 0;
     return { name, previous, current, change: previous ? current / previous - 1 : null };
   }),
-  notes: [
-    "Current baseline uses Kani b07abe8a7 with local compatibility patches and verify-rust-std sync-2026-08-21 fixes.",
-    "The older Kani 0.67.0 snapshot uses a different library snapshot and target context, so its delta is contextual rather than a contribution measurement.",
-    "Semester progress should compare two runs produced at the same time with the same Kani and rustc: upstream baseline versus the version containing the team's changes.",
-  ],
+  notes: snapshot.notes,
 };
 
 mkdirSync(dirname(outputFile), { recursive: true });

@@ -34,21 +34,25 @@ The conversion script is `scripts/build-autoharness-dashboard.mjs`.
 From the repository root:
 
 ```sh
-node scripts/build-autoharness-dashboard.mjs /path/to/baseline-2026-08-31 ui/public/data/autoharness-dashboard.json
+node scripts/build-autoharness-dashboard.mjs /path/to/baseline-2026-09-17 ui/public/data/autoharness-dashboard.json
 ```
 
-This writes both JSON files. The current importer is specific to this baseline,
-including its expected totals, file names, date and version metadata.
-It reads these files from the supplied input folder:
+This writes both JSON files. The importer reads a `snapshot.json` in the input folder that
+names the run's files and carries its metadata, so a new snapshot is a new input folder rather
+than an edit to the script:
 
-- `autoharness-list-b07abe8a7.txt`: generated/skipped functions and reasons.
-- `kani-list-b07abe8a7.json`: Kani version metadata.
-- `core_autoharness_data.md`, `alloc_autoharness_data.md`, `std_autoharness_data.md`:
-  old-release reference counts.
+- `snapshot.json`: `generatedAt`, `listFile`, `kaniListFile`, the `expected` totals the listing
+  must add up to, `meta` (Kani commit, verify-rust-std branch, target), `legacyPrevious`
+  (old-release counts for the context panel) and `notes`.
+- the listing file, the text output of `kani autoharness --list --std`: generated and skipped
+  functions with the skip reasons.
+- the `kani list` JSON file, for the Kani version.
 
-The raw input folder is not required for deployment. For a new snapshot, update
-the importer's inputs and metadata deliberately; do not overwrite these labels
-with a different run. Cross-version comparison is not implemented yet.
+The raw input folder is not required for deployment and is not checked in. The current snapshot
+is the 2026-09-17 x86_64 Linux run (Kani 02abb5b0d, verify-rust-std sync-2026-08-21); the
+previous one, 2026-09-16 on aarch64 (Kani b07abe8a7), is in the history at bb9236d. For a new
+snapshot, write its `snapshot.json` deliberately; do not reuse another run's labels.
+Cross-version comparison is not implemented yet.
 
 ## Publish
 
