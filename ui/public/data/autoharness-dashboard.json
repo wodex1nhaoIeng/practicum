@@ -110,6 +110,90 @@
       "change": 0.7232415902140672
     }
   ],
+  "contributions": {
+    "measuredAt": "2026-09-21",
+    "total": 2093,
+    "rows": [
+      {
+        "pr": 4824,
+        "title": "`&Formatter` / `&mut Formatter` arguments",
+        "harnesses": 147,
+        "note": null
+      },
+      {
+        "pr": 4806,
+        "title": "`&ByteStr` arguments",
+        "harnesses": 61,
+        "note": null
+      },
+      {
+        "pr": 4804,
+        "title": "`&CStr` arguments",
+        "harnesses": 48,
+        "note": null
+      },
+      {
+        "pr": 4802,
+        "title": "the seven other formatting traits",
+        "harnesses": 38,
+        "note": null
+      },
+      {
+        "pr": 4809,
+        "title": "`&Wtf8` arguments",
+        "harnesses": 37,
+        "note": null
+      },
+      {
+        "pr": null,
+        "title": "functions needing two of the five above",
+        "harnesses": 1,
+        "note": null
+      },
+      {
+        "pr": null,
+        "title": "functions needing one of the five above and #4780",
+        "harnesses": 17,
+        "note": null
+      },
+      {
+        "pr": 4780,
+        "title": "pattern types as fields and arguments",
+        "harnesses": 1743,
+        "note": "about 769 of these take a Vec, String or similar type that is derivable only through verify-rust-std's own NonNull impl (an integer cast to a pointer), and 524 take a file-descriptor type; their harnesses run on values that cannot be meaningful until that impl changes"
+      },
+      {
+        "pr": 4782,
+        "title": "Arbitrary for ascii::EscapeDefault",
+        "harnesses": 0,
+        "note": "impl in the kani crate, which the standard-library run does not link"
+      },
+      {
+        "pr": 4784,
+        "title": "Arbitrary for char::EscapeUnicode (merged)",
+        "harnesses": 0,
+        "note": "same reason"
+      },
+      {
+        "pr": 4799,
+        "title": "optional hooks in the missing-function check",
+        "harnesses": 0,
+        "note": "fix; needed for the run, changes no count"
+      },
+      {
+        "pr": 4801,
+        "title": "pattern type inside NonNull when codegenning a Box",
+        "harnesses": 0,
+        "note": "fix; needed for the run, changes no count"
+      },
+      {
+        "pr": 4793,
+        "title": "configurable bounded-argument bounds (merged)",
+        "harnesses": 0,
+        "note": "changes no count"
+      }
+    ]
+  },
   "notes": [
     "Baseline run of 2026-09-17 on x86_64 Linux: Kani 02abb5b0d, which is b07abe8a7 plus the team's two compatibility commits and three fixes (kani#4799, kani#4801, and a local workaround for kani#4794), on verify-rust-std sync-2026-08-21 at 9b38cdc4d84 with the team's local workarounds. Command: kani autoharness --list --std over the library with the unstable feature flags, without --bounded-arguments. 73 minutes, no errors.",
     "The listing omits the 4,563 functions Kani skips as its own implementations; counting them, the run considered 45,796 functions.",

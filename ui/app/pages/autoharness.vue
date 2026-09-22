@@ -10,6 +10,7 @@ type DashboardData = {
   skipReasons: SkipReason[];
   legacyComparison: Comparison[];
   improvementComparison: Comparison[];
+  contributions: { measuredAt: string; total: number; rows: { pr: number | null; title: string; harnesses: number; note: string | null }[] } | null;
   notes: string[];
 };
 
@@ -129,6 +130,18 @@ const delta = (value: number | null) => (value === null ? "pending" : signedPct(
         </div>
       </div>
 
+      <section v-if="data.contributions" class="panel pr-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">By pull request</p><h2>Harnesses generated per PR</h2></div>
+          <div class="legend">measured {{ data.contributions.measuredAt }} · {{ nf.format(data.contributions.total) }} in all</div>
+        </div>
+        <div v-for="row in data.contributions.rows" :key="row.title" class="pr-row">
+          <strong><a v-if="row.pr" :href="`https://github.com/model-checking/kani/pull/${row.pr}`" target="_blank" rel="noopener">#{{ row.pr }}</a><span v-else>—</span></strong>
+          <span>{{ row.title }}<small v-if="row.note"> · {{ row.note }}</small></span>
+          <b>{{ nf.format(row.harnesses) }}</b>
+        </div>
+      </section>
+
       <section class="method">
         <div><p class="eyebrow">Measurement rule</p><h2>How semester progress should be measured</h2></div>
         <ol>
@@ -174,6 +187,7 @@ h2 { margin: 0; font-family: Georgia, serif; font-size: 26px; font-weight: 500; 
 .comparison-row b.pending { color: var(--muted); font-weight: 500; }
 .comparison-stack { display: grid; gap: 20px; align-content: start; }.two-column .comparison-stack .panel { margin: 0; }
 .caveat { margin: 18px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.pr-panel { margin-top: 0; }.pr-row { display: grid; grid-template-columns: 72px 1fr 72px; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 13px; }.pr-row strong a { color: var(--green); text-decoration: none; }.pr-row small { color: var(--muted); }.pr-row b { text-align: right; font-variant-numeric: tabular-nums; }
 .method { max-width: 1180px; margin: 34px auto 0; display: grid; grid-template-columns: .75fr 1.25fr; gap: 60px; padding: 30px 0; border-top: 1px solid var(--line); }.method ol { margin: 0; padding-left: 22px; color: var(--muted); line-height: 1.7; list-style: decimal; }.method li { padding-left: 8px; margin-bottom: 8px; }
 .error-state { max-width: 760px; margin: 80px auto; color: #b42318; }
 @media (max-width: 900px) { .hero { align-items: flex-start; flex-direction: column; }.run-meta { align-items: flex-start; }.metrics { grid-template-columns: repeat(2, 1fr); }.two-column { grid-template-columns: 1fr; }.method { grid-template-columns: 1fr; gap: 22px; } }

@@ -112,6 +112,8 @@ const output = {
     const current = snapshot.improvement.afterChanges[name] ?? null;
     return { name, previous, current, change: previous && current !== null ? current / previous - 1 : null };
   }),
+  // By pull request: harnesses each PR adds in the measured run, straight from the snapshot.
+  contributions: snapshot.contributions ?? null,
   notes: snapshot.notes,
 };
 
