@@ -124,7 +124,7 @@ const delta = (value: number | null) => (value === null ? "pending" : signedPct(
               <span>{{ num(item.current) }}</span>
               <b :class="{ negative: (item.change ?? 0) < 0, pending: item.change === null }">{{ delta(item.change) }}</b>
             </div>
-            <p class="caveat">Same Kani base, rustc and library snapshot, upstream against the team's branches, both runs with --bounded-arguments since the team's models need it; the left column is the baseline's bounded run. Pending until that measured run exists.</p>
+            <p class="caveat">Same Kani base, rustc and library snapshot, upstream against every open team PR, both runs with --bounded-arguments since the team's models need it; the left column is the baseline's bounded run. Measured 2026-09-21; the notes give the split by PR and the caveat on part of it.</p>
           </section>
         </div>
       </div>
