@@ -161,36 +161,6 @@
         "title": "pattern types as fields and arguments",
         "harnesses": 1743,
         "note": "about 769 of these take a Vec, String or similar type that is derivable only through verify-rust-std's own NonNull impl (an integer cast to a pointer), and 524 take a file-descriptor type; their harnesses run on values that cannot be meaningful until that impl changes"
-      },
-      {
-        "pr": 4782,
-        "title": "Arbitrary for ascii::EscapeDefault",
-        "harnesses": 0,
-        "note": "impl in the kani crate, which the standard-library run does not link"
-      },
-      {
-        "pr": 4784,
-        "title": "Arbitrary for char::EscapeUnicode (merged)",
-        "harnesses": 0,
-        "note": "same reason"
-      },
-      {
-        "pr": 4799,
-        "title": "optional hooks in the missing-function check",
-        "harnesses": 0,
-        "note": "fix; needed for the run, changes no count"
-      },
-      {
-        "pr": 4801,
-        "title": "pattern type inside NonNull when codegenning a Box",
-        "harnesses": 0,
-        "note": "fix; needed for the run, changes no count"
-      },
-      {
-        "pr": 4793,
-        "title": "configurable bounded-argument bounds (merged)",
-        "harnesses": 0,
-        "note": "changes no count"
       }
     ]
   },
